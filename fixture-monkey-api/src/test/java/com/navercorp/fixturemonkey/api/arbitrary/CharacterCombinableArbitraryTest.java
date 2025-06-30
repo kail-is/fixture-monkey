@@ -117,6 +117,39 @@ class CharacterCombinableArbitraryTest {
 	}
 
 	@Test
+	void hangul() {
+		// when
+		boolean allHangul = IntStream.range(0, 100)
+			.mapToObj(i -> CombinableArbitrary.chars().hangul().combined())
+			.allMatch(c -> c >= '\uAC00' && c <= '\uD7AF');
+
+		// then
+		then(allHangul).isTrue();
+	}
+
+	@Test
+	void emojiChars() {
+		// when
+		boolean allEmoji = IntStream.range(0, 100)
+			.mapToObj(i -> CombinableArbitrary.chars().emojiChars().combined())
+			.allMatch(c -> c >= '\uD83D' && c <= '\uD83F');
+
+		// then
+		then(allEmoji).isTrue();
+	}
+
+	@Test
+	void whitespace() {
+		// when
+		boolean allWhitespace = IntStream.range(0, 100)
+			.mapToObj(i -> CombinableArbitrary.chars().whitespace().combined())
+			.allMatch(c -> c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f');
+
+		// then
+		then(allWhitespace).isTrue();
+	}
+
+	@Test
 	void lastMethodWinsWithAlphaAndRange() {
 		// given
 		char min = '0';

@@ -82,29 +82,3 @@ public interface CharacterCombinableArbitrary extends CombinableArbitrary<Charac
 	 */
 	CharacterCombinableArbitrary lowercase();
 
-	@Override
-	default CharacterCombinableArbitrary filter(Predicate<Character> predicate) {
-		return this.filter(DEFAULT_MAX_TRIES, predicate);
-	}
-
-	@Override
-	default CharacterCombinableArbitrary filter(int tries, Predicate<Character> predicate) {
-		return new CharacterCombinableArbitraryDelegator(CombinableArbitrary.super.filter(tries, predicate));
-	}
-
-	@Override
-	default CharacterCombinableArbitrary injectNull(double nullProbability) {
-		return new CharacterCombinableArbitraryDelegator(CombinableArbitrary.super.injectNull(nullProbability));
-	}
-
-	@Override
-	default CharacterCombinableArbitrary unique() {
-		return new CharacterCombinableArbitraryDelegator(CombinableArbitrary.super.unique());
-	}
-
-	@Override
-	void clear();
-
-	@Override
-	boolean fixed();
-}

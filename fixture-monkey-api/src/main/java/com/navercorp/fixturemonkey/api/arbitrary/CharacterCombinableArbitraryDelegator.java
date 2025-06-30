@@ -75,6 +75,21 @@ final class CharacterCombinableArbitraryDelegator implements CharacterCombinable
 	}
 
 	@Override
+	public CharacterCombinableArbitrary hangul() {
+		return CombinableArbitrary.chars().hangul();
+	}
+
+	@Override
+	public CharacterCombinableArbitrary emojiChars() {
+		return CombinableArbitrary.chars().emojiChars();
+	}
+
+	@Override
+	public CharacterCombinableArbitrary whitespace() {
+		return CombinableArbitrary.chars().whitespace();
+	}
+
+	@Override
 	public void clear() {
 		delegate.clear();
 	}

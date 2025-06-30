@@ -98,6 +98,27 @@ public final class JqwikCharacterCombinableArbitrary implements CharacterCombina
 	}
 
 	@Override
+	public CharacterCombinableArbitrary hangul() {
+		return new JqwikCharacterCombinableArbitrary(
+			Arbitraries.chars().range('\uAC00', '\uD7AF')  // 가-힣
+		);
+	}
+
+	@Override
+	public CharacterCombinableArbitrary emojiChars() {
+		return new JqwikCharacterCombinableArbitrary(
+			Arbitraries.chars().range('\uD83D', '\uD83F')  // Basic emoji range
+		);
+	}
+
+	@Override
+	public CharacterCombinableArbitrary whitespace() {
+		return new JqwikCharacterCombinableArbitrary(
+			Arbitraries.of(' ', '\t', '\n', '\r', '\f')
+		);
+	}
+
+	@Override
 	public void clear() {
 		// ignored
 	}
