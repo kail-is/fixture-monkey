@@ -44,6 +44,8 @@ public interface CombinableArbitrary<T> {
 		ServiceLoader.load(IntegerCombinableArbitrary.class);
 	ServiceLoader<LongCombinableArbitrary> LONG_COMBINABLE_ARBITRARY_SERVICE_LOADER =
 		ServiceLoader.load(LongCombinableArbitrary.class);
+	ServiceLoader<CharacterCombinableArbitrary> CHARACTER_COMBINABLE_ARBITRARY_SERVICE_LOADER =
+		ServiceLoader.load(CharacterCombinableArbitrary.class);
 	ServiceLoader<StringCombinableArbitrary> STRING_COMBINABLE_ARBITRARY_SERVICE_LOADER =
 		ServiceLoader.load(StringCombinableArbitrary.class);
 
@@ -215,6 +217,17 @@ public interface CombinableArbitrary<T> {
 	@API(since = "1.1.12", status = Status.EXPERIMENTAL)
 	static LongCombinableArbitrary longs() {
 		return LONG_COMBINABLE_ARBITRARY_SERVICE_LOADER.iterator().next();
+	}
+
+	/**
+	 * Generates a {@link CharacterCombinableArbitrary} which returns a randomly generated Character.
+	 * You can customize the generated Character by using {@link CharacterCombinableArbitrary}.
+	 *
+	 * @return a {@link CombinableArbitrary} returns a randomly generated Character
+	 */
+	@API(since = "1.1.12", status = Status.EXPERIMENTAL)
+	static CharacterCombinableArbitrary chars() {
+		return CHARACTER_COMBINABLE_ARBITRARY_SERVICE_LOADER.iterator().next();
 	}
 
 	/**
