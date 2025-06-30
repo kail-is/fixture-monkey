@@ -229,4 +229,37 @@ class ByteCombinableArbitraryTest {
 		// then
 		then(actual).isFalse();
 	}
+
+	@Test
+	void lastMethodWinsRangeOverPositive() {
+		// when - positive()를 무시하고 withRange()가 우선되어야 함
+		boolean allInRange = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.bytes().positive().withRange((byte) -10, (byte) -1).combined())
+			.allMatch(b -> b >= -10 && b <= -1);
+
+		// then
+		then(allInRange).isTrue();
+	}
+
+	@Test
+	void lastMethodWinsOddOverEven() {
+		// when - even()을 무시하고 odd()가 우선되어야 함
+		boolean allOdd = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.bytes().even().odd().combined())
+			.allMatch(b -> b % 2 != 0);
+
+		// then
+		then(allOdd).isTrue();
+	}
+
+	@Test
+	void byteFilterWithMultipleOfFive() {
+		// when - 5의 배수만 필터링
+		boolean allMultipleOfFive = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.bytes().withRange((byte) 0, (byte) 100).filter(b -> b % 5 == 0).combined())
+			.allMatch(b -> b % 5 == 0);
+
+		// then
+		then(allMultipleOfFive).isTrue();
+	}
 }

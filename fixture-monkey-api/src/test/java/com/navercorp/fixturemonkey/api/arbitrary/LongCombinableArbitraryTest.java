@@ -91,30 +91,6 @@ class LongCombinableArbitraryTest {
 	}
 
 	@Test
-	void greaterOrEqual() {
-		// given
-		long min = 1000L;
-
-		// when
-		Long actual = CombinableArbitrary.longs().greaterOrEqual(min).combined();
-
-		// then
-		then(actual).isGreaterThanOrEqualTo(min);
-	}
-
-	@Test
-	void lessOrEqual() {
-		// given
-		long max = 100L;
-
-		// when
-		Long actual = CombinableArbitrary.longs().lessOrEqual(max).combined();
-
-		// then
-		then(actual).isLessThanOrEqualTo(max);
-	}
-
-	@Test
 	void lastMethodWinsWithPositiveAndRange() {
 		// given
 		long min = 100L;
@@ -125,18 +101,6 @@ class LongCombinableArbitraryTest {
 
 		// then
 		then(actual).isBetween(min, max);
-	}
-
-	@Test
-	void lastMethodWinsWithGreaterOrEqualAndLessOrEqual() {
-		// given
-		long max = 50L;
-
-		// when - greaterOrEqual()을 무시하고 lessOrEqual()이 우선되어야 함
-		Long actual = CombinableArbitrary.longs().greaterOrEqual(1000L).lessOrEqual(max).combined();
-
-		// then
-		then(actual).isLessThanOrEqualTo(max);
 	}
 
 	// ===== ArbitraryTest 스타일: 공통 기능 검증 =====

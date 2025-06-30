@@ -68,22 +68,6 @@ public interface LongCombinableArbitrary extends CombinableArbitrary<Long> {
 	 */
 	LongCombinableArbitrary odd();
 
-	/**
-	 * Generates a LongCombinableArbitrary which produces longs greater than or equal to the specified minimum.
-	 *
-	 * @param min the minimum value (inclusive)
-	 * @return the LongCombinableArbitrary producing longs >= {@code min}
-	 */
-	LongCombinableArbitrary greaterOrEqual(long min);
-
-	/**
-	 * Generates a LongCombinableArbitrary which produces longs less than or equal to the specified maximum.
-	 *
-	 * @param max the maximum value (inclusive)
-	 * @return the LongCombinableArbitrary producing longs <= {@code max}
-	 */
-	LongCombinableArbitrary lessOrEqual(long max);
-
 	@Override
 	default LongCombinableArbitrary filter(Predicate<Long> predicate) {
 		return this.filter(DEFAULT_MAX_TRIES, predicate);

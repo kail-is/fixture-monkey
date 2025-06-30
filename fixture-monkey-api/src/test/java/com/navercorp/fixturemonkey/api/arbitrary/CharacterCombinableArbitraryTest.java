@@ -273,4 +273,37 @@ class CharacterCombinableArbitraryTest {
 		// then
 		then(actual).isFalse();
 	}
+
+	@Test
+	void lastMethodWinsKoreanOverAscii() {
+		// when - ascii()를 무시하고 korean()이 우선되어야 함
+		boolean allKorean = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.chars().ascii().korean().combined())
+			.allMatch(c -> c >= '\uAC00' && c <= '\uD7AF');
+
+		// then
+		then(allKorean).isTrue();
+	}
+
+	@Test
+	void lastMethodWinsRangeOverAlpha() {
+		// when - alpha()를 무시하고 withRange()가 우선되어야 함
+		boolean allInRange = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.chars().alpha().withRange('0', '9').combined())
+			.allMatch(c -> c >= '0' && c <= '9');
+
+		// then
+		then(allInRange).isTrue();
+	}
+
+	@Test
+	void characterFilterWithSpecificCondition() {
+		// when - 대문자만 필터링
+		boolean allUppercase = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.chars().alpha().filter(Character::isUpperCase).combined())
+			.allMatch(Character::isUpperCase);
+
+		// then
+		then(allUppercase).isTrue();
+	}
 }

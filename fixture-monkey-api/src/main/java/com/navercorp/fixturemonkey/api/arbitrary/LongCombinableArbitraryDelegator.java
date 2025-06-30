@@ -65,16 +65,6 @@ final class LongCombinableArbitraryDelegator implements LongCombinableArbitrary 
 	}
 
 	@Override
-	public LongCombinableArbitrary greaterOrEqual(long min) {
-		return CombinableArbitrary.longs().greaterOrEqual(min);
-	}
-
-	@Override
-	public LongCombinableArbitrary lessOrEqual(long max) {
-		return CombinableArbitrary.longs().lessOrEqual(max);
-	}
-
-	@Override
 	public void clear() {
 		delegate.clear();
 	}

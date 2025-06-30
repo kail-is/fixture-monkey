@@ -102,4 +102,4 @@ public interface CharacterCombinableArbitrary extends CombinableArbitrary<Charac
 	 * @return the CharacterCombinableArbitrary producing whitespace characters
 	 */
 	CharacterCombinableArbitrary whitespace();
-
+}

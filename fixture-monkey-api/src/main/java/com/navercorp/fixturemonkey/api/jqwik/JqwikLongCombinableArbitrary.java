@@ -76,16 +76,6 @@ public final class JqwikLongCombinableArbitrary implements LongCombinableArbitra
 	}
 
 	@Override
-	public LongCombinableArbitrary greaterOrEqual(long min) {
-		return new JqwikLongCombinableArbitrary(Arbitraries.longs().greaterOrEqual(min));
-	}
-
-	@Override
-	public LongCombinableArbitrary lessOrEqual(long max) {
-		return new JqwikLongCombinableArbitrary(Arbitraries.longs().lessOrEqual(max));
-	}
-
-	@Override
 	public void clear() {
 		// ignored
 	}

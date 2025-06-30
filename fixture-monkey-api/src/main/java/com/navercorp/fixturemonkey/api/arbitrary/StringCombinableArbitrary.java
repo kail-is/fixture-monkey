@@ -91,22 +91,22 @@ public interface StringCombinableArbitrary extends CombinableArbitrary<String> {
 	StringCombinableArbitrary numeric();
 
 	/**
-	 * Generates a StringCombinableArbitrary which contains only Hangul characters.
+	 * Generates a StringCombinableArbitrary which contains only Korean characters.
 	 * It conflicts with {@link #alphabetic()} and {@link #ascii()} and {@link #numeric()}.
 	 * Calling this method will ignore any previously called character set methods.
 	 *
 	 * <p>Example:
 	 * <pre>{@code
-	 * // Only the last character set method (hangul) will be applied
-	 * stringArbitrary.ascii().hangul() // generates Hangul characters only
+	 * // Only the last character set method (korean) will be applied
+	 * stringArbitrary.ascii().korean() // generates Korean characters only
 	 *
 	 * // Other configuration methods are also ignored when character set method is called
-	 * stringArbitrary.withMinLength(5).hangul() // withMinLength(5) is ignored
+	 * stringArbitrary.withMinLength(5).korean() // withMinLength(5) is ignored
 	 * }</pre>
 	 *
-	 * @return the StringCombinableArbitrary which contains only Hangul characters
+	 * @return the StringCombinableArbitrary which contains only Korean characters
 	 */
-	StringCombinableArbitrary hangul();
+	StringCombinableArbitrary korean();
 
 	default StringCombinableArbitrary withMinLength(int min) {
 		return this.withLength(min, STRING_DEFAULT_MAX_LENGTH);

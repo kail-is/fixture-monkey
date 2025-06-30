@@ -95,34 +95,6 @@ class ShortCombinableArbitraryTest {
 	}
 
 	@Test
-	void greaterOrEqual() {
-		// given
-		short min = 1000;
-
-		// when
-		boolean allGreaterOrEqual = IntStream.range(0, 100)
-			.mapToObj(i -> CombinableArbitrary.shorts().greaterOrEqual(min).combined())
-			.allMatch(s -> s >= min);
-
-		// then
-		then(allGreaterOrEqual).isTrue();
-	}
-
-	@Test
-	void lessOrEqual() {
-		// given
-		short max = 100;
-
-		// when
-		boolean allLessOrEqual = IntStream.range(0, 100)
-			.mapToObj(i -> CombinableArbitrary.shorts().lessOrEqual(max).combined())
-			.allMatch(s -> s <= max);
-
-		// then
-		then(allLessOrEqual).isTrue();
-	}
-
-	@Test
 	void lastMethodWinsWithPositiveAndRange() {
 		// given
 		short min = -100;
@@ -247,5 +219,38 @@ class ShortCombinableArbitraryTest {
 
 		// then
 		then(actual).isFalse();
+	}
+
+	@Test
+	void lastMethodWinsNegativeOverPositive() {
+		// when - positive()를 무시하고 negative()가 우선되어야 함
+		boolean allNegative = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.shorts().positive().negative().combined())
+			.allMatch(s -> s < 0);
+
+		// then
+		then(allNegative).isTrue();
+	}
+
+	@Test
+	void lastMethodWinsEvenOverRange() {
+		// when - withRange()를 무시하고 even()이 우선되어야 함
+		boolean allEven = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.shorts().withRange((short) 1, (short) 1000).even().combined())
+			.allMatch(s -> s % 2 == 0);
+
+		// then
+		then(allEven).isTrue();
+	}
+
+	@Test
+	void shortFilterWithHundredMultiple() {
+		// when - 100의 배수만 필터링
+		boolean allMultipleOfHundred = IntStream.range(0, 30)
+			.mapToObj(i -> CombinableArbitrary.shorts().withRange((short) 0, (short) 1000).filter(s -> s % 100 == 0).combined())
+			.allMatch(s -> s % 100 == 0);
+
+		// then
+		then(allMultipleOfHundred).isTrue();
 	}
 }
