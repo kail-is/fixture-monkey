@@ -98,14 +98,14 @@ public final class JqwikCharacterCombinableArbitrary implements CharacterCombina
 	}
 
 	@Override
-	public CharacterCombinableArbitrary hangul() {
+	public CharacterCombinableArbitrary korean() {
 		return new JqwikCharacterCombinableArbitrary(
 			Arbitraries.chars().range('\uAC00', '\uD7AF')  // 가-힣
 		);
 	}
 
 	@Override
-	public CharacterCombinableArbitrary emojiChars() {
+	public CharacterCombinableArbitrary emoji() {
 		return new JqwikCharacterCombinableArbitrary(
 			Arbitraries.chars().range('\uD83D', '\uD83F')  // Basic emoji range
 		);

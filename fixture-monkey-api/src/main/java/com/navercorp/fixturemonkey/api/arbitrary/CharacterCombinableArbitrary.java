@@ -82,3 +82,24 @@ public interface CharacterCombinableArbitrary extends CombinableArbitrary<Charac
 	 */
 	CharacterCombinableArbitrary lowercase();
 
+	/**
+	 * Generates a CharacterCombinableArbitrary which produces Korean characters (가-힣).
+	 *
+	 * @return the CharacterCombinableArbitrary producing Korean characters
+	 */
+	CharacterCombinableArbitrary korean();
+
+	/**
+	 * Generates a CharacterCombinableArbitrary which produces emoji characters.
+	 *
+	 * @return the CharacterCombinableArbitrary producing emoji characters
+	 */
+	CharacterCombinableArbitrary emoji();
+
+	/**
+	 * Generates a CharacterCombinableArbitrary which produces whitespace characters.
+	 *
+	 * @return the CharacterCombinableArbitrary producing whitespace characters
+	 */
+	CharacterCombinableArbitrary whitespace();
+

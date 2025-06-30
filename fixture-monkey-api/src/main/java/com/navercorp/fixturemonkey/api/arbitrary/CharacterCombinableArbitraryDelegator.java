@@ -75,13 +75,13 @@ final class CharacterCombinableArbitraryDelegator implements CharacterCombinable
 	}
 
 	@Override
-	public CharacterCombinableArbitrary hangul() {
-		return CombinableArbitrary.chars().hangul();
+	public CharacterCombinableArbitrary korean() {
+		return CombinableArbitrary.chars().korean();
 	}
 
 	@Override
-	public CharacterCombinableArbitrary emojiChars() {
-		return CombinableArbitrary.chars().emojiChars();
+	public CharacterCombinableArbitrary emoji() {
+		return CombinableArbitrary.chars().emoji();
 	}
 
 	@Override

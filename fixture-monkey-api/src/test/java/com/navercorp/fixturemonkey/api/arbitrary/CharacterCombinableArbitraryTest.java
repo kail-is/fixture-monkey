@@ -117,21 +117,21 @@ class CharacterCombinableArbitraryTest {
 	}
 
 	@Test
-	void hangul() {
+	void korean() {
 		// when
-		boolean allHangul = IntStream.range(0, 100)
-			.mapToObj(i -> CombinableArbitrary.chars().hangul().combined())
+		boolean allKorean = IntStream.range(0, 100)
+			.mapToObj(i -> CombinableArbitrary.chars().korean().combined())
 			.allMatch(c -> c >= '\uAC00' && c <= '\uD7AF');
 
 		// then
-		then(allHangul).isTrue();
+		then(allKorean).isTrue();
 	}
 
 	@Test
-	void emojiChars() {
+	void emoji() {
 		// when
 		boolean allEmoji = IntStream.range(0, 100)
-			.mapToObj(i -> CombinableArbitrary.chars().emojiChars().combined())
+			.mapToObj(i -> CombinableArbitrary.chars().emoji().combined())
 			.allMatch(c -> c >= '\uD83D' && c <= '\uD83F');
 
 		// then
