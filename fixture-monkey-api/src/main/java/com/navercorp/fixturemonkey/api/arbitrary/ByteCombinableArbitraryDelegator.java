@@ -65,13 +65,8 @@ final class ByteCombinableArbitraryDelegator implements ByteCombinableArbitrary 
 	}
 
 	@Override
-	public ByteCombinableArbitrary greaterOrEqual(byte min) {
-		return CombinableArbitrary.bytes().greaterOrEqual(min);
-	}
-
-	@Override
-	public ByteCombinableArbitrary lessOrEqual(byte max) {
-		return CombinableArbitrary.bytes().lessOrEqual(max);
+	public ByteCombinableArbitrary ascii() {
+		return CombinableArbitrary.bytes().ascii();
 	}
 
 	@Override

@@ -76,13 +76,8 @@ public final class JqwikByteCombinableArbitrary implements ByteCombinableArbitra
 	}
 
 	@Override
-	public ByteCombinableArbitrary greaterOrEqual(byte min) {
-		return new JqwikByteCombinableArbitrary(Arbitraries.bytes().greaterOrEqual(min));
-	}
-
-	@Override
-	public ByteCombinableArbitrary lessOrEqual(byte max) {
-		return new JqwikByteCombinableArbitrary(Arbitraries.bytes().lessOrEqual(max));
+	public ByteCombinableArbitrary ascii() {
+		return new JqwikByteCombinableArbitrary(Arbitraries.bytes().between((byte) 0, (byte) 127));
 	}
 
 	@Override

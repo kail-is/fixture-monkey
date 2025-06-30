@@ -69,20 +69,11 @@ public interface ByteCombinableArbitrary extends CombinableArbitrary<Byte> {
 	ByteCombinableArbitrary odd();
 
 	/**
-	 * Generates a ByteCombinableArbitrary which produces bytes greater than or equal to the specified minimum.
+	 * Generates a ByteCombinableArbitrary which produces bytes in ASCII range (0-127).
 	 *
-	 * @param min the minimum value (inclusive)
-	 * @return the ByteCombinableArbitrary producing bytes >= {@code min}
+	 * @return the ByteCombinableArbitrary producing ASCII bytes
 	 */
-	ByteCombinableArbitrary greaterOrEqual(byte min);
-
-	/**
-	 * Generates a ByteCombinableArbitrary which produces bytes less than or equal to the specified maximum.
-	 *
-	 * @param max the maximum value (inclusive)
-	 * @return the ByteCombinableArbitrary producing bytes <= {@code max}
-	 */
-	ByteCombinableArbitrary lessOrEqual(byte max);
+	ByteCombinableArbitrary ascii();
 
 	@Override
 	default ByteCombinableArbitrary filter(Predicate<Byte> predicate) {
