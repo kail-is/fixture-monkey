@@ -76,16 +76,6 @@ public final class JqwikShortCombinableArbitrary implements ShortCombinableArbit
 	}
 
 	@Override
-	public ShortCombinableArbitrary greaterOrEqual(short min) {
-		return new JqwikShortCombinableArbitrary(Arbitraries.shorts().greaterOrEqual(min));
-	}
-
-	@Override
-	public ShortCombinableArbitrary lessOrEqual(short max) {
-		return new JqwikShortCombinableArbitrary(Arbitraries.shorts().lessOrEqual(max));
-	}
-
-	@Override
 	public void clear() {
 		// ignored
 	}

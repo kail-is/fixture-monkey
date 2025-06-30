@@ -65,16 +65,6 @@ final class ShortCombinableArbitraryDelegator implements ShortCombinableArbitrar
 	}
 
 	@Override
-	public ShortCombinableArbitrary greaterOrEqual(short min) {
-		return CombinableArbitrary.shorts().greaterOrEqual(min);
-	}
-
-	@Override
-	public ShortCombinableArbitrary lessOrEqual(short max) {
-		return CombinableArbitrary.shorts().lessOrEqual(max);
-	}
-
-	@Override
 	public void clear() {
 		delegate.clear();
 	}

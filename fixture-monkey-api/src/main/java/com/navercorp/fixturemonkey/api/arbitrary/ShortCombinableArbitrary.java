@@ -68,22 +68,6 @@ public interface ShortCombinableArbitrary extends CombinableArbitrary<Short> {
 	 */
 	ShortCombinableArbitrary odd();
 
-	/**
-	 * Generates a ShortCombinableArbitrary which produces shorts greater than or equal to the specified minimum.
-	 *
-	 * @param min the minimum value (inclusive)
-	 * @return the ShortCombinableArbitrary producing shorts >= {@code min}
-	 */
-	ShortCombinableArbitrary greaterOrEqual(short min);
-
-	/**
-	 * Generates a ShortCombinableArbitrary which produces shorts less than or equal to the specified maximum.
-	 *
-	 * @param max the maximum value (inclusive)
-	 * @return the ShortCombinableArbitrary producing shorts <= {@code max}
-	 */
-	ShortCombinableArbitrary lessOrEqual(short max);
-
 	@Override
 	default ShortCombinableArbitrary filter(Predicate<Short> predicate) {
 		return this.filter(DEFAULT_MAX_TRIES, predicate);
