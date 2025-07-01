@@ -21,6 +21,7 @@ package com.navercorp.fixturemonkey.tests.kotlin
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.api.arbitrary.CombinableArbitrary
 import com.navercorp.fixturemonkey.javax.validation.plugin.JavaxValidationPlugin
+import com.navercorp.fixturemonkey.kotest.KotestByteCombinableArbitrary
 import com.navercorp.fixturemonkey.kotest.KotestIntegerCombinableArbitrary
 import com.navercorp.fixturemonkey.kotest.KotestLongCombinableArbitrary
 import com.navercorp.fixturemonkey.kotest.KotestPlugin
@@ -1002,6 +1003,55 @@ class KotestInJunitTest {
         val actual = CombinableArbitrary.shorts().withRange(10.toShort(), 20.toShort()).combined()
 
         then(actual).isBetween(10.toShort(), 20.toShort())
+    }
+
+    @Test
+    fun byteCombinableArbitrary() {
+        val actual = CombinableArbitrary.bytes()
+
+        then(actual).isInstanceOf(KotestByteCombinableArbitrary::class.java)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryPositive() {
+        val actual = CombinableArbitrary.bytes().positive().combined()
+
+        then(actual).isPositive()
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryNegative() {
+        val actual = CombinableArbitrary.bytes().negative().combined()
+
+        then(actual).isNegative()
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryEven() {
+        val actual = CombinableArbitrary.bytes().even().combined()
+
+        then(actual % 2).isEqualTo(0)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryOdd() {
+        val actual = CombinableArbitrary.bytes().odd().combined()
+
+        then(actual % 2).isEqualTo(1)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryAscii() {
+        val actual = CombinableArbitrary.bytes().ascii().combined()
+
+        then(actual).isBetween(0.toByte(), 127.toByte())
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun byteCombinableArbitraryWithRange() {
+        val actual = CombinableArbitrary.bytes().withRange(10.toByte(), 20.toByte()).combined()
+
+        then(actual).isBetween(10.toByte(), 20.toByte())
     }
 
     @Test
