@@ -22,6 +22,7 @@ import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.api.arbitrary.CombinableArbitrary
 import com.navercorp.fixturemonkey.javax.validation.plugin.JavaxValidationPlugin
 import com.navercorp.fixturemonkey.kotest.KotestIntegerCombinableArbitrary
+import com.navercorp.fixturemonkey.kotest.KotestLongCombinableArbitrary
 import com.navercorp.fixturemonkey.kotest.KotestPlugin
 import com.navercorp.fixturemonkey.kotest.KotestStringCombinableArbitrary
 import com.navercorp.fixturemonkey.kotest.giveMeArb
@@ -916,6 +917,48 @@ class KotestInJunitTest {
         val actual = CombinableArbitrary.integers().withRange(10, 20).combined()
 
         then(actual).isBetween(10, 20)
+    }
+
+    @Test
+    fun longCombinableArbitrary() {
+        val actual = CombinableArbitrary.longs()
+
+        then(actual).isInstanceOf(KotestLongCombinableArbitrary::class.java)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun longCombinableArbitraryPositive() {
+        val actual = CombinableArbitrary.longs().positive().combined()
+
+        then(actual).isPositive()
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun longCombinableArbitraryNegative() {
+        val actual = CombinableArbitrary.longs().negative().combined()
+
+        then(actual).isNegative()
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun longCombinableArbitraryEven() {
+        val actual = CombinableArbitrary.longs().even().combined()
+
+        then(actual % 2).isEqualTo(0)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun longCombinableArbitraryOdd() {
+        val actual = CombinableArbitrary.longs().odd().combined()
+
+        then(actual % 2).isEqualTo(1)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun longCombinableArbitraryWithRange() {
+        val actual = CombinableArbitrary.longs().withRange(10L, 20L).combined()
+
+        then(actual).isBetween(10L, 20L)
     }
 
     @Test
