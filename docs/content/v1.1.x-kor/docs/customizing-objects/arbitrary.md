@@ -282,6 +282,364 @@ CombinableArbitrary.integers().positive().negative()
 CombinableArbitrary.integers().positive().withRange(10, 50)
 ```
 
+### CombinableArbitrary.bytes()
+
+`CombinableArbitrary.bytes()` 메서드는 바이트 값을 생성하기 위한 전용 메서드를 제공하는 `ByteCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 바이트 제약조건이 있는 패킷 생성
+Packet packet = fixtureMonkey.giveMeBuilder(Packet.class)
+    .set("flag", CombinableArbitrary.bytes()
+        .ascii()               // ASCII 범위만
+        .even())               // 짝수만
+    .set("signal", CombinableArbitrary.bytes()
+        .withRange((byte)10, (byte)42)  // 10-42 사이
+        .positive())           // 양수만
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 바이트 제약조건이 있는 패킷 생성
+val packet = fixtureMonkey.giveMeBuilder<Packet>()
+    .setExp(Packet::flag, CombinableArbitrary.bytes()
+        .ascii()               // ASCII 범위만
+        .even())               // 짝수만
+    .setExp(Packet::signal, CombinableArbitrary.bytes()
+        .withRange(10.toByte(), 42.toByte())  // 10-42 사이
+        .positive())           // 양수만
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### ByteCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 바이트 생성 (양 끝값 포함) | `bytes().withRange((byte)1, (byte)100)` |
+| `positive()` | 양수 바이트만 생성 (≥ 1) | `bytes().positive()` |
+| `negative()` | 음수 바이트만 생성 (≤ -1) | `bytes().negative()` |
+| `even()` | 짝수 바이트만 생성 | `bytes().even()` |
+| `odd()` | 홀수 바이트만 생성 | `bytes().odd()` |
+| `ascii()` | ASCII 범위 바이트 생성 (0-127) | `bytes().ascii()` |
+
+**중요 참고사항:**
+- 제약 메서드는 **마지막에 호출된 메서드가 우선**합니다.
+  ```java
+  // positive()는 무시되고 음수 바이트가 생성됩니다
+  CombinableArbitrary.bytes().positive().negative()
+  ```
+- `ascii()`와 다른 메서드를 조합하면 결과가 더 좁아집니다.
+  ```java
+  // 짝수 ASCII 바이트만 생성합니다 (0, 2, 4, ..., 126)
+  CombinableArbitrary.bytes().ascii().even()
+  ```
+
+### CombinableArbitrary.longs()
+
+`CombinableArbitrary.longs()` 메서드는 64비트 정수를 생성하는 `LongCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 비즈니스 규칙을 반영한 long 값 생성
+Payment payment = fixtureMonkey.giveMeBuilder(Payment.class)
+    .set("amount", CombinableArbitrary.longs()
+        .withRange(10_000L, 1_000_000L)  // 10,000 ~ 1,000,000
+        .positive())                     // 양수만
+    .set("transactionId", CombinableArbitrary.longs()
+        .multipleOf(100)                 // 100 단위 배수
+        .nonZero())                      // 0 제외
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 비즈니스 규칙을 반영한 long 값 생성
+val payment = fixtureMonkey.giveMeBuilder<Payment>()
+    .setExp(Payment::amount, CombinableArbitrary.longs()
+        .withRange(10_000L, 1_000_000L)
+        .positive())
+    .setExp(Payment::transactionId, CombinableArbitrary.longs()
+        .multipleOf(100)
+        .nonZero())
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### LongCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 long 생성 (양 끝값 포함) | `longs().withRange(0L, 1_000L)` |
+| `positive()` | 양수 long만 생성 (≥ 1) | `longs().positive()` |
+| `negative()` | 음수 long만 생성 (≤ -1) | `longs().negative()` |
+| `even()` | 짝수 long만 생성 | `longs().even()` |
+| `odd()` | 홀수 long만 생성 | `longs().odd()` |
+| `nonZero()` | 0을 제외하고 생성 | `longs().nonZero()` |
+| `multipleOf(divisor)` | 특정 배수만 생성 | `longs().multipleOf(500)` |
+
+**중요 참고사항:**
+- 제약 메서드는 **마지막에 호출된 메서드**가 우선합니다.
+- `multipleOf(0)`은 `ArithmeticException`을 발생시키므로 0이 아닌 값을 사용하세요.
+
+### CombinableArbitrary.shorts()
+
+`CombinableArbitrary.shorts()` 메서드는 16비트 정수를 생성하는 `ShortCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// short 값으로 구성된 일정 정보 생성
+Schedule schedule = fixtureMonkey.giveMeBuilder(Schedule.class)
+    .set("month", CombinableArbitrary.shorts().month())
+    .set("day", CombinableArbitrary.shorts()
+        .day()
+        .filter(d -> d <= 28))  // 28일 이하로 제한
+    .set("score", CombinableArbitrary.shorts().score())
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// short 값으로 구성된 일정 정보 생성
+val schedule = fixtureMonkey.giveMeBuilder<Schedule>()
+    .setExp(Schedule::month, CombinableArbitrary.shorts().month())
+    .setExp(Schedule::day, CombinableArbitrary.shorts()
+        .day()
+        .filter { it <= 28 })
+    .setExp(Schedule::score, CombinableArbitrary.shorts().score())
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### ShortCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 short 생성 (양 끝값 포함) | `shorts().withRange((short)1, (short)100)` |
+| `positive()` | 양수 short만 생성 (≥ 1) | `shorts().positive()` |
+| `negative()` | 음수 short만 생성 (≤ -1) | `shorts().negative()` |
+| `even()` | 짝수 short만 생성 | `shorts().even()` |
+| `odd()` | 홀수 short만 생성 | `shorts().odd()` |
+| `nonZero()` | 0을 제외하고 생성 | `shorts().nonZero()` |
+| `multipleOf(value)` | 특정 값의 배수만 생성 | `shorts().multipleOf((short)5)` |
+| `percentage()` | 0-100 범위 값 생성 | `shorts().percentage()` |
+| `score()` | 점수(0-100) 용도로 생성 | `shorts().score()` |
+| `year()` | 연도(1900-2100) 생성 | `shorts().year()` |
+| `month()` | 월(1-12) 생성 | `shorts().month()` |
+| `day()` | 일(1-31) 생성 | `shorts().day()` |
+| `hour()` | 시(0-23) 생성 | `shorts().hour()` |
+| `minute()` | 분(0-59) 생성 | `shorts().minute()` |
+
+**중요 참고사항:**
+- 역시 **마지막으로 호출한 메서드가 우선**합니다.
+- `year()`, `month()` 등을 사용한 뒤 추가 필터로 도메인 규칙(예: 윤년)을 세밀하게 제어할 수 있습니다.
+
+### CombinableArbitrary.bigIntegers()
+
+`CombinableArbitrary.bigIntegers()` 메서드는 임의정밀도 정수를 생성하는 `BigIntegerCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 큰 정수 범위를 다루는 멤버십 데이터 생성
+LoyaltyAccount account = fixtureMonkey.giveMeBuilder(LoyaltyAccount.class)
+    .set("balance", CombinableArbitrary.bigIntegers()
+        .withRange(new BigInteger("0"), new BigInteger("100000000000"))
+        .even())
+    .set("primeId", CombinableArbitrary.bigIntegers()
+        .withRange(new BigInteger("1000"), new BigInteger("10000"))
+        .prime())
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 큰 정수 범위를 다루는 멤버십 데이터 생성
+val account = fixtureMonkey.giveMeBuilder<LoyaltyAccount>()
+    .setExp(LoyaltyAccount::balance, CombinableArbitrary.bigIntegers()
+        .withRange(BigInteger("0"), BigInteger("100000000000"))
+        .even())
+    .setExp(LoyaltyAccount::primeId, CombinableArbitrary.bigIntegers()
+        .withRange(BigInteger("1000"), BigInteger("10000"))
+        .prime())
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### BigIntegerCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 임의정밀 정수 생성 | `bigIntegers().withRange(BigInteger.ZERO, BigInteger("1000"))` |
+| `positive()` | 양수만 생성 (≥ 1) | `bigIntegers().positive()` |
+| `negative()` | 음수만 생성 (≤ -1) | `bigIntegers().negative()` |
+| `nonZero()` | 0 제외 | `bigIntegers().nonZero()` |
+| `percentage()` | 0-100 범위 값 생성 | `bigIntegers().percentage()` |
+| `score(min, max)` | 사용자 지정 점수 범위 생성 | `bigIntegers().score(BigInteger.ZERO, BigInteger("1000"))` |
+| `even()` | 짝수만 생성 | `bigIntegers().even()` |
+| `odd()` | 홀수만 생성 | `bigIntegers().odd()` |
+| `multipleOf(divisor)` | 특정 배수 생성 | `bigIntegers().multipleOf(BigInteger("1024"))` |
+| `prime()` | 소수만 생성 | `bigIntegers().prime()` |
+
+**중요 참고사항:**
+- 소수 생성(`prime()`)은 큰 범위에서 계산 비용이 크므로 적절한 범위를 함께 지정하세요.
+- 제약 메서드는 여전히 **마지막 호출 우선** 규칙을 따릅니다.
+
+### CombinableArbitrary.bigDecimals()
+
+`CombinableArbitrary.bigDecimals()` 메서드는 임의정밀도 소수를 생성하는 `BigDecimalCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 금액/비율과 같은 정밀도가 필요한 값 생성
+Invoice invoice = fixtureMonkey.giveMeBuilder(Invoice.class)
+    .set("subtotal", CombinableArbitrary.bigDecimals()
+        .withRange(new BigDecimal("10.00"), new BigDecimal("9999.99"))
+        .withScale(2)
+        .normalized())
+    .set("discountRate", CombinableArbitrary.bigDecimals()
+        .percentage()
+        .withPrecision(3))
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 금액/비율과 같은 정밀도가 필요한 값 생성
+val invoice = fixtureMonkey.giveMeBuilder<Invoice>()
+    .setExp(Invoice::subtotal, CombinableArbitrary.bigDecimals()
+        .withRange(BigDecimal("10.00"), BigDecimal("9999.99"))
+        .withScale(2)
+        .normalized())
+    .setExp(Invoice::discountRate, CombinableArbitrary.bigDecimals()
+        .percentage()
+        .withPrecision(3))
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### BigDecimalCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 임의정밀 소수 생성 | `bigDecimals().withRange(BigDecimal("0.0"), BigDecimal("100.0"))` |
+| `positive()` | 양수만 생성 (> 0) | `bigDecimals().positive()` |
+| `negative()` | 음수만 생성 (< 0) | `bigDecimals().negative()` |
+| `nonZero()` | 0 제외 | `bigDecimals().nonZero()` |
+| `percentage()` | 0.0-100.0 범위 생성 | `bigDecimals().percentage()` |
+| `score(min, max)` | 임의의 점수 범위 생성 | `bigDecimals().score(BigDecimal("1.0"), BigDecimal("5.0"))` |
+| `withPrecision(precision)` | 유효 숫자 자릿수 제한 | `bigDecimals().withPrecision(4)` |
+| `withScale(scale)` | 소수점 이하 자리수 고정 | `bigDecimals().withScale(2)` |
+| `normalized()` | 불필요한 0을 제거한 정규화 값 생성 | `bigDecimals().normalized()` |
+
+**중요 참고사항:**
+- `withPrecision`과 `withScale`을 조합하면 통화 포맷과 같은 형식을 손쉽게 강제할 수 있습니다.
+- 제약이 충돌하면 항상 **마지막 호출이 우선**합니다.
+
+### CombinableArbitrary.doubles()
+
+`CombinableArbitrary.doubles()` 메서드는 배정도 부동소수를 생성하는 `DoubleCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 부동소수 기반 센서 측정 값 생성
+Measurement measurement = fixtureMonkey.giveMeBuilder(Measurement.class)
+    .set("value", CombinableArbitrary.doubles()
+        .withRange(-100.0, 100.0)
+        .finite())
+    .set("confidence", CombinableArbitrary.doubles()
+        .normalized()
+        .withPrecision(3))
+    .set("special", CombinableArbitrary.doubles()
+        .withRange(-1.0, 1.0)
+        .withStandardSpecialValues())
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 부동소수 기반 센서 측정 값 생성
+val measurement = fixtureMonkey.giveMeBuilder<Measurement>()
+    .setExp(Measurement::value, CombinableArbitrary.doubles()
+        .withRange(-100.0, 100.0)
+        .finite())
+    .setExp(Measurement::confidence, CombinableArbitrary.doubles()
+        .normalized()
+        .withPrecision(3))
+    .setExp(Measurement::special, CombinableArbitrary.doubles()
+        .withRange(-1.0, 1.0)
+        .withStandardSpecialValues())
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### DoubleCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 double 생성 | `doubles().withRange(-10.0, 10.0)` |
+| `positive()` | 양수만 생성 (> 0) | `doubles().positive()` |
+| `negative()` | 음수만 생성 (< 0) | `doubles().negative()` |
+| `nonZero()` | 0 제외 | `doubles().nonZero()` |
+| `withPrecision(scale)` | 소수점 자리 제한 | `doubles().withPrecision(2)` |
+| `finite()` | NaN/무한대 제외 | `doubles().finite()` |
+| `infinite()` | ±무한대 생성 | `doubles().infinite()` |
+| `normalized()` | 0.0-1.0 범위 생성 | `doubles().normalized()` |
+| `nan()` | NaN 생성 | `doubles().nan()` |
+| `percentage()` | 0-100 범위 생성 | `doubles().percentage()` |
+| `score()` | 점수(0-100) 생성 | `doubles().score()` |
+| `withSpecialValue(value)` | 사용자 정의 특수값 삽입 | `doubles().withSpecialValue(Double.MIN_NORMAL)` |
+| `withStandardSpecialValues()` | NaN/±∞ 등 표준 특수값 삽입 | `doubles().withStandardSpecialValues()` |
+
+**중요 참고사항:**
+- `nan()`, `infinite()`, `withStandardSpecialValues()`는 이전 범위 설정을 무시할 수 있으므로 마지막에 호출하는 것이 안전합니다.
+- 특수값을 배제하려면 먼저 `finite()`를 호출하세요.
+
+### CombinableArbitrary.floats()
+
+`CombinableArbitrary.floats()` 메서드는 단정도 부동소수를 생성하는 `FloatCombinableArbitrary`를 제공합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// float 기반 센서 데이터를 생성
+SensorReading reading = fixtureMonkey.giveMeBuilder(SensorReading.class)
+    .set("temperature", CombinableArbitrary.floats()
+        .withRange(-40f, 50f)
+        .finite())
+    .set("probability", CombinableArbitrary.floats()
+        .normalized()
+        .withPrecision(2))
+    .set("fallback", CombinableArbitrary.floats()
+        .withRange(-1f, 1f)
+        .withStandardSpecialValues())
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// float 기반 센서 데이터를 생성
+val reading = fixtureMonkey.giveMeBuilder<SensorReading>()
+    .setExp(SensorReading::temperature, CombinableArbitrary.floats()
+        .withRange(-40f, 50f)
+        .finite())
+    .setExp(SensorReading::probability, CombinableArbitrary.floats()
+        .normalized()
+        .withPrecision(2))
+    .setExp(SensorReading::fallback, CombinableArbitrary.floats()
+        .withRange(-1f, 1f)
+        .withStandardSpecialValues())
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### FloatCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 float 생성 | `floats().withRange(-5f, 5f)` |
+| `positive()` | 양수만 생성 (> 0) | `floats().positive()` |
+| `negative()` | 음수만 생성 (< 0) | `floats().negative()` |
+| `nonZero()` | 0 제외 | `floats().nonZero()` |
+| `withPrecision(scale)` | 소수점 자리 제한 | `floats().withPrecision(3)` |
+| `finite()` | NaN/무한대 제외 | `floats().finite()` |
+| `infinite()` | ±무한대 생성 | `floats().infinite()` |
+| `normalized()` | 0.0-1.0 범위 생성 | `floats().normalized()` |
+| `nan()` | NaN 생성 | `floats().nan()` |
+| `percentage()` | 0-100 범위 생성 | `floats().percentage()` |
+| `score()` | 점수(0-100) 생성 | `floats().score()` |
+| `withSpecialValue(value)` | 사용자 정의 특수값 삽입 | `floats().withSpecialValue(Float.MIN_VALUE)` |
+| `withStandardSpecialValues()` | 표준 특수값 삽입 | `floats().withStandardSpecialValues()` |
+
+**중요 참고사항:**
+- NaN/무한대를 허용하지 않아야 한다면 반드시 `finite()`를 적용하세요.
+- 특수값 삽입 메서드는 마지막에 호출해야 다른 제약에 의해 제거되지 않습니다.
+
 ### CombinableArbitrary.strings()
 
 `CombinableArbitrary.strings()` 메서드는 문자열 생성을 위한 전용 메서드들을 제공하는 `StringCombinableArbitrary`를 반환합니다:
@@ -343,9 +701,65 @@ val user = fixtureMonkey.giveMeBuilder<User>()
    CombinableArbitrary.strings().withLength(5, 10).alphabetic()
    ```
 
+### CombinableArbitrary.chars()
+
+`CombinableArbitrary.chars()` 메서드는 단일 문자를 생성하기 위한 전용 메서드를 제공하는 `CharacterCombinableArbitrary`를 반환합니다:
+
+{{< tabpane persist=false >}}
+{{< tab header="Java" lang="java">}}
+// 다양한 문자 제약조건을 가진 회원 등급 생성
+Member member = fixtureMonkey.giveMeBuilder(Member.class)
+    .set("grade", CombinableArbitrary.chars()
+        .uppercase()           // 대문자만
+        .withRange('A', 'D'))  // A-D 사이
+    .set("locale", CombinableArbitrary.chars()
+        .korean()              // 한글만
+        .filter(c -> c >= '나')) // 추가 필터
+    .sample();
+{{< /tab >}}
+{{< tab header="Kotlin" lang="kotlin">}}
+// 다양한 문자 제약조건을 가진 회원 등급 생성
+val member = fixtureMonkey.giveMeBuilder<Member>()
+    .setExp(Member::grade, CombinableArbitrary.chars()
+        .uppercase()           // 대문자만
+        .withRange('A', 'D'))  // A-D 사이
+    .setExp(Member::locale, CombinableArbitrary.chars()
+        .korean()              // 한글만
+        .filter { it >= '나' }) // 추가 필터
+    .sample()
+{{< /tab >}}
+{{< /tabpane>}}
+
+#### CharacterCombinableArbitrary 메서드
+
+| 메서드 | 설명 | 예시 |
+|--------|------|------|
+| `withRange(min, max)` | min과 max 사이의 문자 생성 (양 끝값 포함) | `chars().withRange('A', 'Z')` |
+| `alphabetic()` | 알파벳 문자만 생성 (a-z, A-Z) | `chars().alphabetic()` |
+| `numeric()` | 숫자 문자만 생성 (0-9) | `chars().numeric()` |
+| `alphaNumeric()` | 알파벳 + 숫자 조합 생성 | `chars().alphaNumeric()` |
+| `ascii()` | ASCII 인쇄 가능 문자만 생성 (0x20-0x7E) | `chars().ascii()` |
+| `uppercase()` | 대문자만 생성 (A-Z) | `chars().uppercase()` |
+| `lowercase()` | 소문자만 생성 (a-z) | `chars().lowercase()` |
+| `korean()` | 한글 완성형 문자 생성 (가-힣) | `chars().korean()` |
+| `emoji()` | 대표적인 이모지 코드 포인트 생성 | `chars().emoji()` |
+| `whitespace()` | 공백 문자만 생성 (스페이스, 탭 등) | `chars().whitespace()` |
+
+**중요 참고사항:**
+- 문자 집합 관련 메서드(`alphabetic`, `numeric`, `uppercase` 등)를 여러 번 연결하면 **마지막에 호출된 메서드**가 우선합니다.
+  ```java
+  // alphabetic()을 무시하고 숫자 문자만 생성합니다
+  CombinableArbitrary.chars().alphabetic().numeric()
+  ```
+- 문자 집합 메서드 이후에 범위나 필터를 추가하면 해당 조건이 위에 덮어씌워집니다.
+  ```java
+  // uppercase() 결과에서 다시 범위를 재정의합니다
+  CombinableArbitrary.chars().uppercase().withRange('A', 'C')
+  ```
+
 ### 고급 필터링
 
-`IntegerCombinableArbitrary`와 `StringCombinableArbitrary` 모두 고급 필터링을 지원합니다:
+`integers()`, `bytes()`, `shorts()`, `longs()`, `bigIntegers()`, `bigDecimals()`, `doubles()`, `floats()` 등 숫자용 CombinableArbitrary와 `strings()`, `chars()` 모두 고급 필터링을 지원합니다:
 
 {{< tabpane persist=false >}}
 {{< tab header="Java" lang="java">}}
@@ -360,6 +774,18 @@ String code = CombinableArbitrary.strings()
     .withLength(6, 8)
     .filterCharacter(c -> Character.isUpperCase(c) || Character.isDigit(c))  // 대문자와 숫자만
     .combined();
+
+// 사용자 정의 조건으로 바이트 필터링
+Byte checksum = CombinableArbitrary.bytes()
+    .ascii()
+    .filter(b -> (b & 0x0F) == 0)  // 하위 4비트가 0인 값만
+    .combined();
+
+// 사용자 정의 조건으로 문자 필터링
+Character emoji = CombinableArbitrary.chars()
+    .emoji()
+    .filter(c -> Character.getType(c) == Character.OTHER_SYMBOL || c == '❤')
+    .combined();
 {{< /tab >}}
 {{< tab header="Kotlin" lang="kotlin">}}
 // 사용자 정의 조건으로 정수 필터링
@@ -372,6 +798,18 @@ val score = CombinableArbitrary.integers()
 val code = CombinableArbitrary.strings()
     .withLength(6, 8)
     .filterCharacter { it.isUpperCase() || it.isDigit() }  // 대문자와 숫자만
+    .combined()
+
+// 사용자 정의 조건으로 바이트 필터링
+val checksum = CombinableArbitrary.bytes()
+    .ascii()
+    .filter { (it.toInt() and 0x0F) == 0 }  // 하위 4비트가 0인 값만
+    .combined()
+
+// 사용자 정의 조건으로 문자 필터링
+val emoji = CombinableArbitrary.chars()
+    .emoji()
+    .filter { it == '❤' || Character.getType(it) == Character.OTHER_SYMBOL }
     .combined()
 {{< /tab >}}
 {{< /tabpane>}}
